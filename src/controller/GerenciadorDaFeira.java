@@ -15,16 +15,7 @@ public class GerenciadorDaFeira {
         this.matrizBancas = new Feirante[feira.getQuantidadeDeLinhas()][feira.getQuantidadeDeColunas()];
     }
     
-    public boolean adicionarFeirante(Feirante feirante , int linha, int coluna){
-        
-        if(verificarDiponibilidade (linha coluna) == null){
-            matrizBancas[linha][coluna] = feirante;
-            
-            return true;
-        }
-        
-        return false;
-    }
+    // mostrar a matriz princial do "espaço feira";
 
     public void mostrarBanca(){
         
@@ -39,7 +30,33 @@ public class GerenciadorDaFeira {
         }
     }
     
-    // metodo para remover feirante da feira.
+    // verificando se o espaço dentro da matriz esta diponivel;
+    
+    public boolean verificarDiponibilidade(int linha, int coluna){
+        
+        if(linha >= 0 && linha < matrizBancas.length && coluna >= 0 && coluna < matrizBancas[linha].length){
+            if(matrizBancas[linha][coluna] == null){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    // metodo para adicionar o feirante;
+    
+    public boolean adicionarFeirante(Feirante feirante , int linha, int coluna){
+        
+        if(verificarDiponibilidade (linha, coluna)){
+            matrizBancas[linha][coluna] = feirante;
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // metodo para remover feirante da feira;
     
     public void removerFeirante(int linha, int coluna){
         
@@ -61,19 +78,7 @@ public class GerenciadorDaFeira {
     public Feira getFeira(){
         return feira;
     }
-    
-    // verificando se o espaço dentro da matriz esta diponivel
-    
-    public boolean verificarDiponibilidade(int linha, int coluna){
-        
-        if(linha >= 0 && linha < matrizBancas.length && coluna >= 0 && coluna < matrizBancas[linha].length){
-            if(matrizBancas[linha][coluna] == null){
-                return true;
-            }
-        }
-        
-        return false;
-    }
+
 }
         
 
