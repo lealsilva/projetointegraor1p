@@ -10,6 +10,8 @@ public class Inscricao {
     private Feira feira;
     private Feirante feirante;
     private String statusAprovacao;
+    private int colunaBanca;
+    private int linhaBanca;
 
     public int getId() {
         return id;
@@ -42,16 +44,36 @@ public class Inscricao {
     public void setStatusAprovacao(String statusAprovacao) {
         this.statusAprovacao = statusAprovacao;
     }
+
+    public int getColunaBanca() {
+        return colunaBanca;
+    }
+
+    public void setColunaBanca(int colunaBanca) {
+        this.colunaBanca = colunaBanca;
+    }
+
+    public int getLinhaBanca() {
+        return linhaBanca;
+    }
+
+    public void setLinhaBanca(int linhaBanca) {
+        this.linhaBanca = linhaBanca;
+    }
+    
+    
     
     public Inscricao(){
         
     }
 
-    public Inscricao(int id, Feira feira, Feirante feirante, String statusAprovacao) {
+    public Inscricao(int id, Feira feira, Feirante feirante, String statusAprovacao, int colunaBanca, int linhaBanca) {
         this.id = id;
         this.feira = feira;
         this.feirante = feirante;
         this.statusAprovacao = statusAprovacao;
+        this.colunaBanca = colunaBanca;
+        this.linhaBanca = linhaBanca;
     }
     
 }

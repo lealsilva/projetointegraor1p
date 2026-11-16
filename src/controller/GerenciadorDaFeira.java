@@ -15,17 +15,14 @@ public class GerenciadorDaFeira {
         this.matrizBancas = new Feirante[feira.getQuantidadeDeLinhas()][feira.getQuantidadeDeColunas()];
     }
     
-    public boolean adicionarFeirante(Feirante feirante){
+    public boolean adicionarFeirante(Feirante feirante , int linha, int coluna){
         
-        for (int linha = 0; linha < matrizBancas.length; linha++) {
-            for (int coluna = 0; coluna < matrizBancas[linha].length; coluna++) {
-           
-                if(matrizBancas[linha][coluna] == null){
-                    matrizBancas[linha][coluna] = feirante;
-                    return true;
-                } 
-            }
+        if(verificarDiponibilidade (linha coluna) == null){
+            matrizBancas[linha][coluna] = feirante;
+            
+            return true;
         }
+        
         return false;
     }
 
@@ -42,6 +39,8 @@ public class GerenciadorDaFeira {
         }
     }
     
+    // metodo para remover feirante da feira.
+    
     public void removerFeirante(int linha, int coluna){
         
         if(linha >= 0 && linha < matrizBancas.length && coluna >= 0 && coluna < matrizBancas[linha].length){
@@ -55,6 +54,25 @@ public class GerenciadorDaFeira {
         }else{
             System.out.println("Espaço inexistente");
         }
+    }
+    
+    // metodo para verifica a valor que esta dentro de "feira"
+    
+    public Feira getFeira(){
+        return feira;
+    }
+    
+    // verificando se o espaço dentro da matriz esta diponivel
+    
+    public boolean verificarDiponibilidade(int linha, int coluna){
+        
+        if(linha >= 0 && linha < matrizBancas.length && coluna >= 0 && coluna < matrizBancas[linha].length){
+            if(matrizBancas[linha][coluna] == null){
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
         
