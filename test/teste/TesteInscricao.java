@@ -27,6 +27,7 @@ public class TesteInscricao {
         Inscricao inscricao2 = new Inscricao(2, feira, feirante2, "PENDENTE", 0, 0);
         Inscricao inscricao3 = new Inscricao(3, feira, feirante2, "PENDENTE", 1, 0);
         Inscricao inscricao4 = new Inscricao(4, feira, feirante2, "PENDENTE", 0, 1);
+        Inscricao inscricao5 = new Inscricao(5, feira, feirante2, "PENDENTE", 2, 0);
         
         gerenciadorDeInscricao.adicionarInscricao(inscricao);
         gerenciadorDeInscricao.aprovarInscricao(inscricao, gerenciadorDaFeira);
@@ -41,12 +42,19 @@ public class TesteInscricao {
         gerenciadorDeInscricao.adicionarInscricao(inscricao4);
         gerenciadorDeInscricao.aprovarInscricao(inscricao4, gerenciadorDaFeira);
         
+        gerenciadorDeInscricao.adicionarInscricao(inscricao5);
+        
+        gerenciadorDeInscricao.verificarInscricoesExitente(feira, feirante2);
+        
         System.out.println(gerenciadorDeInscricao.quantidadeDeInscricao());
         
         System.out.println(inscricao.getStatusAprovacao());
         System.out.println(inscricao2.getStatusAprovacao());
         System.out.println(inscricao3.getStatusAprovacao());
         System.out.println(inscricao4.getStatusAprovacao());
+        System.out.println(inscricao5.getStatusAprovacao());
+        System.out.println(gerenciadorDeInscricao.quantidadeDeInscricao());
+
         
         gerenciadorDaFeira.mostrarBanca();
         

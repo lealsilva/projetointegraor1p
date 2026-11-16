@@ -67,13 +67,13 @@ public class Inscricao {
         
     }
 
-    public Inscricao(int id, Feira feira, Feirante feirante, String statusAprovacao, int colunaBanca, int linhaBanca) {
+    public Inscricao(int id, Feira feira, Feirante feirante, String statusAprovacao, int linhaBanca, int colunaBanca) {
         this.id = id;
         this.feira = feira;
         this.feirante = feirante;
         this.statusAprovacao = statusAprovacao;
-        this.colunaBanca = colunaBanca;
         this.linhaBanca = linhaBanca;
+        this.colunaBanca = colunaBanca;
     }
     
 }
