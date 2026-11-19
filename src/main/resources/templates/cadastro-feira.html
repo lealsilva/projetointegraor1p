@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Feira</title>
+</head>
+<body>
+
+    <h1>Cadastro de Feira</h1>
+        
+        
+    <form action="/cadastrar-feira" method="post">
+        
+        <label>Nome da feira:</label>
+        <input type="text" name="nome">
+
+        <label>Bairro:</label>
+        <input type="text" name = "bairro">
+
+        <label>Latitude:</label>
+        <input type="number" step = "any" name = "latitude">
+
+        <label>Longitude:</label>
+        <input type="number"  step = "any" name = "longitude">
+
+        <label>Quantidade de linhas:</label>
+        <input type="number" name = "quantidadeDeLinhas">
+
+        <label>Quantidade de colunas:</label>
+        <input type="number" name = "quantidadeDeColunas">
+
+        <button type="submit">Cadastrar Feira</button>
+        
+    </form>
+    
+    
+
+    <a href="/">Voltar para o início</a>
+
+</body>
+</html>

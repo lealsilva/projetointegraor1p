@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Feirantes cadastrados</title>
+</head>
+<body>
+    <h1>Feirantes cadastrados</h1>
+        <div th:each="feirante : ${feirantes}">
+            <h2 th:text="${feirante.nomeDoResponsavel}"></h2>
+
+            <p th:text="${feirante.nomeDaBanca}"></p>
+
+            <p th:text="${feirante.categoriaDaBanca}"></p>
+
+            <p th:text="${feirante.numeroDaLicenca}"></p>
+
+            <p th:text="${feirante.statusAprovacao}"></p>
+        </div>
+</body>
+</html>

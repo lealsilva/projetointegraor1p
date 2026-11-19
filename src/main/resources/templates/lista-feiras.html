@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Feiras cadastradas</title>
+</head>
+<body>
+
+    <h1>Feiras cadastradas</h1>
+    
+        <div th:each="feira : ${feiras}">
+
+        <h2 th:text="${feira.nome}"></h2>
+
+        <p th:text="${feira.bairro}"></p>
+
+        <p th:text="${feira.latitude}"></p>
+
+        <p th:text="${feira.longitude}"></p>
+
+    </div>
+
+</body>
+</html>

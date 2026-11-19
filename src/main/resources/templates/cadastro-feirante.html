@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Feirante</title>
+</head>
+<body>
+    <h1>Cadastro de Feirante</h1>
+</body>
+    <form action="/cadastrar-feirante" method="post">
+
+    <label>Nome do responsável:</label>
+    <input type="text" name="nomeDoResponsavel">
+
+    <label>Nome da banca:</label>
+    <input type="text" name="nomeDaBanca">
+
+    <label>Categoria da banca:</label>
+    <input type="text" name="categoriaDaBanca">
+
+    <label>Número da licença:</label>
+    <input type="text" name="numeroDaLicenca">
+
+    <button type="submit">Cadastrar Feirante</button>
+
+    </form>
+</html>

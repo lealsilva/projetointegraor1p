@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitar Inscrição</title>
+</head>
+
+<body>
+
+    <h1>Solicitar inscrição em uma feira</h1>
+
+    <form action="/cadastrar-inscricao" method="post">
+
+        <label>Selecione o feirante:</label>
+
+        <select name="feiranteId">
+            <option value="">Selecione um feirante</option>
+
+            <option th:each="feirante : ${feirantes}"
+                    th:value="${feirante.id}"
+                    th:text="${feirante.nomeDoResponsavel}">
+            </option>
+        </select>
+
+        <br><br>
+
+        <label>Selecione a feira:</label>
+
+        <select name="feiraId">
+            <option value="">Selecione uma feira</option>
+
+            <option th:each="feira : ${feiras}"
+                    th:value="${feira.id}"
+                    th:text="${feira.nome}">
+            </option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Solicitar inscrição</button>
+
+    </form>
+
+</body>
+</html>
