@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Área do Feirante | Feira Perto</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e5e5e5;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            color: #EA1D2C;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .subtitulo {
+            color: #888;
+            font-size: 12px;
+            margin: 8px 0 40px;
+        }
+
+        .menu-titulo {
+            color: #999;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 14px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .menu a:hover,
+        .menu a.ativo {
+            background: #fff0f1;
+            color: #EA1D2C;
+            font-weight: bold;
+        }
+
+        .menu .sair {
+            color: #EA1D2C;
+            margin-top: 35px;
+        }
+
+        .conteudo {
+            flex: 1;
+            padding: 35px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 15px;
+        }
+
+        .topo h1 {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .topo p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .perfil {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 13px 18px;
+            font-size: 13px;
+        }
+
+        .boas-vindas {
+            background: #EA1D2C;
+            color: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+        }
+
+        .boas-vindas h2 {
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .boas-vindas p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .secao-titulo {
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+
+        .cartoes {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .cartao {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .icone {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff0f1;
+            color: #EA1D2C;
+            border-radius: 10px;
+            font-size: 21px;
+            margin-bottom: 18px;
+        }
+
+        .cartao h3 {
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .cartao p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .cartao a {
+            color: #EA1D2C;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .aviso {
+            background: white;
+            border: 1px solid #eee;
+            border-left: 4px solid #EA1D2C;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .aviso h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .aviso p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .rodape {
+            margin-top: 40px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 750px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .subtitulo {
+                margin-bottom: 20px;
+            }
+
+            .menu {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+
+            .menu a {
+                margin: 0;
+            }
+
+            .conteudo {
+                padding: 20px;
+            }
+
+            .topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .cartoes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">Feira Perto</div>
+        <div class="subtitulo">Área do Feirante</div>
+
+        <div class="menu-titulo">MENU PRINCIPAL</div>
+
+        <nav class="menu">
+
+            <a th:href="@{/painel-feirante}" class="ativo">
+                ▦ &nbsp; Meu painel
+            </a>
+
+            <a th:href="@{/feiras}">
+                ◫ &nbsp; Feiras disponíveis
+            </a>
+
+            <a th:href="@{/cadastro-inscricao}">
+                + &nbsp; Participar de uma feira
+            </a>
+
+            <a th:href="@{/mapa}">
+                ⌖ &nbsp; Mapa das feiras
+            </a>
+
+            <a th:href="@{/login-feirante}" class="sair">
+                ↩ &nbsp; Sair
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <header class="topo">
+
+            <div>
+                <h1>Área do Feirante</h1>
+                <p>Gerencie sua participação nas feiras municipais.</p>
+            </div>
+
+            <div class="perfil">
+                Espaço do Feirante
+            </div>
+
+        </header>
+
+        <section class="boas-vindas">
+
+            <h2>Bem-vindo ao Feira Perto!</h2>
+
+            <p>
+                Encontre feiras municipais, solicite sua participação
+                e acompanhe suas inscrições em um só lugar.
+            </p>
+
+        </section>
+
+        <h2 class="secao-titulo">Acesso rápido</h2>
+
+        <section class="cartoes">
+
+            <div class="cartao">
+
+                <div class="icone">◫</div>
+
+                <h3>Feiras disponíveis</h3>
+
+                <p>
+                    Consulte as feiras cadastradas e encontre
+                    oportunidades para participar.
+                </p>
+
+                <a th:href="@{/feiras}">
+                    Consultar feiras →
+                </a>
+
+            </div>
+
+            <div class="cartao">
+
+                <div class="icone">+</div>
+
+                <h3>Participar de uma feira</h3>
+
+                <p>
+                    Escolha uma feira e solicite sua participação
+                    após a aprovação do seu cadastro.
+                </p>
+
+                <a th:href="@{/cadastro-inscricao}">
+                    Realizar inscrição →
+                </a>
+
+            </div>
+
+            <div class="cartao">
+
+                <div class="icone">⌖</div>
+
+                <h3>Mapa das feiras</h3>
+
+                <p>
+                    Visualize as feiras municipais e consulte
+                    a distribuição das bancas.
+                </p>
+
+                <a th:href="@{/mapa}">
+                    Abrir mapa →
+                </a>
+
+            </div>
+
+            <div class="cartao">
+
+                <div class="icone">♙</div>
+
+                <h3>Meu cadastro</h3>
+
+                <p>
+                    Consulte as informações sobre seu cadastro
+                    como feirante.
+                </p>
+
+                <a th:href="@{/cadastro-feirante}">
+                    Consultar informações →
+                </a>
+
+            </div>
+
+        </section>
+
+        <section class="aviso">
+
+            <h3>Importante</h3>
+
+            <p>
+                Para participar das feiras municipais, seu cadastro
+                precisa estar aprovado pela Prefeitura.
+                Após a aprovação, suas inscrições nas feiras serão
+                aprovadas automaticamente, conforme a disponibilidade
+                de bancas.
+            </p>
+
+        </section>
+
+        <footer class="rodape">
+            Feira Perto © 2026 — Sistema de Gestão de Feiras Municipais
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

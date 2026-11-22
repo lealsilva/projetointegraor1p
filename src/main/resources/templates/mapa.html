@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Feira Perto | Mapa das Feiras</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+
+    <style>
+        :root {
+            --red: #EA1D2C;
+            --red-dark: #c91523;
+            --ink: #242424;
+            --muted: #77777D;
+            --bg: #F7F7F8;
+            --line: #ECECEF;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--ink);
+            background: var(--bg);
+        }
+
+        #map {
+            position: fixed;
+            inset: 0;
+            background: #e7edf0;
+        }
+
+        .top {
+            position: fixed;
+            z-index: 5;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 14px 20px;
+            background: white;
+            box-shadow: 0 2px 12px #0002;
+        }
+
+        .top-content {
+            max-width: 1250px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .brand {
+            color: var(--red);
+            font-size: 24px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .searchbox {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: #F7F7F8;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 6px 8px;
+            flex: 1;
+            max-width: 650px;
+        }
+
+        .searchbox input {
+            border: 0;
+            outline: 0;
+            background: transparent;
+            flex: 1;
+            min-width: 0;
+            font-size: 15px;
+            padding: 10px;
+        }
+
+        .searchbox button {
+            border: 0;
+            background: var(--red);
+            color: white;
+            border-radius: 9px;
+            padding: 11px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .searchbox button:hover {
+            background: var(--red-dark);
+        }
+
+        .locate {
+            position: fixed;
+            z-index: 4;
+            right: 20px;
+            top: 90px;
+            background: white;
+            color: var(--red);
+            box-shadow: 0 3px 14px #0003;
+            border: 0;
+            border-radius: 13px;
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .locate:hover {
+            background: #fff0f1;
+        }
+
+        .panel {
+            position: fixed;
+            z-index: 3;
+            left: 20px;
+            top: 100px;
+            bottom: 20px;
+            width: 390px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 4px 25px #0002;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panelhead {
+            padding: 23px 22px 17px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panelhead h1 {
+            font-size: 21px;
+            margin: 0 0 8px;
+        }
+
+        .panelhead p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        #status {
+            font-size: 12px;
+            color: var(--red);
+            margin-top: 13px;
+            font-weight: bold;
+        }
+
+        #lista {
+            overflow: auto;
+            padding: 8px 18px 18px;
+            flex: 1;
+        }
+
+        .feira {
+            display: flex;
+            gap: 13px;
+            align-items: center;
+            width: 100%;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            background: white;
+            text-align: left;
+            padding: 15px 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .feira:hover {
+            background: #fff6f6;
+        }
+
+        .pin {
+            width: 46px;
+            height: 46px;
+            flex: none;
+            border-radius: 13px;
+            background: #FDE8EA;
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+        }
+
+        .info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .info strong {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .info span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .empty {
+            padding: 30px 10px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .popup-feira {
+            min-width: 190px;
+            max-width: 260px;
+            color: var(--ink);
+        }
+
+        .popup-feira h3 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: var(--red);
+        }
+
+        .popup-feira .bairro {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .popup-feira h4 {
+            font-size: 14px;
+            margin: 10px 0 8px;
+            border-top: 1px solid var(--line);
+            padding-top: 10px;
+        }
+
+        .popup-feirante {
+            border-bottom: 1px solid var(--line);
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        .popup-feirante strong {
+            display: block;
+            color: var(--ink);
+            font-size: 13px;
+        }
+
+        .popup-feirante span {
+            display: block;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .sem-feirantes {
+            color: var(--muted);
+            font-size: 12px;
+            padding: 5px 0;
+        }
+
+        .bottomnav {
+            position: fixed;
+            z-index: 6;
+            top: 17px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            padding: 6px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #0002;
+        }
+
+        .bottomnav a {
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 11px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .bottomnav a:hover {
+            background: #fff0f1;
+            color: var(--red);
+        }
+
+        .bottomnav a:first-child {
+            color: white;
+            background: var(--red);
+        }
+
+        .maplibregl-popup-content {
+            font-family: Arial, sans-serif;
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        @media (max-width: 1050px) {
+            .bottomnav {
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                justify-content: center;
+                border-radius: 0;
+                padding: 8px 4px;
+                overflow-x: auto;
+                box-shadow: 0 -2px 12px #0002;
+            }
+
+            .bottomnav a {
+                font-size: 11px;
+                padding: 9px 8px;
+            }
+
+            .panel {
+                bottom: 65px;
+                height: 38%;
+                top: auto;
+                left: 12px;
+                right: 12px;
+                width: auto;
+                border-radius: 18px;
+            }
+
+            .locate {
+                top: 85px;
+                right: 14px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .top {
+                padding: 10px;
+            }
+
+            .top-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .brand {
+                font-size: 21px;
+            }
+
+            .searchbox {
+                max-width: none;
+            }
+
+            .searchbox input {
+                font-size: 14px;
+            }
+
+            .searchbox button {
+                padding: 10px 13px;
+            }
+
+            .panel {
+                height: 37%;
+                left: 10px;
+                right: 10px;
+                bottom: 65px;
+            }
+
+            .panelhead {
+                padding: 15px;
+            }
+
+            .panelhead h1 {
+                font-size: 18px;
+            }
+
+            #lista {
+                padding: 5px 14px 12px;
+            }
+
+            .bottomnav {
+                gap: 2px;
+            }
+
+            .bottomnav a {
+                font-size: 10px;
+                padding: 9px 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map" aria-label="Mapa das feiras cadastradas"></div>
+
+    <!-- Cabeçalho -->
+    <header class="top">
+
+        <div class="top-content">
+
+            <a th:href="@{/}" class="brand">
+                Feira Perto
+            </a>
+
+            <form class="searchbox" id="formBusca">
+
+                <input
+                    id="busca"
+                    type="search"
+                    placeholder="Buscar feira ou bairro"
+                    aria-label="Buscar feira ou bairro">
+
+                <button type="submit">
+                    Buscar
+                </button>
+
+            </form>
+
+        </div>
+
+    </header>
+
+    <!-- Botão de localização -->
+    <button
+        class="locate"
+        id="localizar"
+        title="Usar minha localização"
+        aria-label="Usar minha localização">
+        ◎
+    </button>
+
+    <!-- Dados das feiras e dos feirantes -->
+    <div id="dadosFeiras" hidden>
+
+        <div
+            th:each="feira : ${feiras}"
+            class="dado-feira"
+            th:attr="
+                data-id=${feira.id},
+                data-nome=${feira.nome},
+                data-bairro=${feira.bairro},
+                data-lat=${feira.latitude},
+                data-lng=${feira.longitude}">
+
+            <div
+                th:each="inscricao : ${inscricoesPorFeira[feira.id]}"
+                class="dado-feirante"
+                th:attr="
+                    data-nome-banca=${inscricao.feirante.nomeDaBanca},
+                    data-responsavel=${inscricao.feirante.nomeDoResponsavel},
+                    data-categoria=${inscricao.feirante.categoriaDaBanca}">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Painel de feiras -->
+    <section class="panel">
+
+        <div class="panelhead">
+
+            <h1>Feiras cadastradas</h1>
+
+            <p>
+                Selecione uma feira para visualizar seus participantes.
+            </p>
+
+            <div id="status" aria-live="polite">
+                Carregando feiras cadastradas...
+            </div>
+
+        </div>
+
+        <div id="lista"></div>
+
+    </section>
+
+    <!-- Navegação -->
+    <nav class="bottomnav" aria-label="Navegação principal">
+        
+        <a href="/">Início</a>
+        
+        <a th:href="@{/mapa}">Mapa</a>
+
+        <a th:href="@{/feiras}">Feiras</a>
+
+
+    </nav>
+
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+    <script>
+        (function() {
+
+            'use strict';
+
+            const centro = [-49.2643, -16.6869];
+
+            // Carrega os dados enviados pelo Thymeleaf
+            const dados = [...document.querySelectorAll('.dado-feira')].map(el => ({
+
+                id: el.dataset.id,
+                nome: el.dataset.nome || 'Feira sem nome',
+                bairro: el.dataset.bairro || 'Bairro não informado',
+
+                lat: Number(el.dataset.lat),
+                lng: Number(el.dataset.lng),
+
+                feirantes: [...el.querySelectorAll('.dado-feirante')].map(item => ({
+                    nomeBanca: item.dataset.nomeBanca || 'Banca sem nome',
+                    responsavel: item.dataset.responsavel || 'Responsável não informado',
+                    categoria: item.dataset.categoria || 'Categoria não informada'
+                })),
+
+                marcador: null
+
+            }));
+
+            // Verifica quais feiras possuem coordenadas válidas
+            const validas = dados.filter(f =>
+                Number.isFinite(f.lat) &&
+                Number.isFinite(f.lng) &&
+                !(f.lat === 0 && f.lng === 0) &&
+                Math.abs(f.lat) <= 90 &&
+                Math.abs(f.lng) <= 180
+            );
+
+            const lista = document.getElementById('lista');
+            const status = document.getElementById('status');
+            const busca = document.getElementById('busca');
+
+            let mapa = null;
+
+            // Protege os dados exibidos nos elementos HTML
+            function esc(valor) {
+
+                return String(valor).replace(/[&<>"']/g, c => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[c]));
+
+            }
+
+            // Monta as informações exibidas ao clicar no marcador
+            function popupHtml(feira) {
+
+                let html = `
+                    <div class="popup-feira">
+
+                        <h3>${esc(feira.nome)}</h3>
+
+                        <div class="bairro">
+                            ${esc(feira.bairro)}
+                        </div>
+
+                        <h4>Feirantes participantes</h4>
+                `;
+
+                if (feira.feirantes.length === 0) {
+
+                    html += `
+                        <div class="sem-feirantes">
+                            Nenhum feirante aprovado nesta feira.
+                        </div>
+                    `;
+
+                } else {
+
+                    feira.feirantes.forEach(feirante => {
+
+                        html += `
+                            <div class="popup-feirante">
+
+                                <strong>${esc(feirante.nomeBanca)}</strong>
+
+                                <span>
+                                    Responsável: ${esc(feirante.responsavel)}
+                                </span>
+
+                                <span>
+                                    ${esc(feirante.categoria)}
+                                </span>
+
+                            </div>
+                        `;
+
+                    });
+
+                }
+
+                html += '</div>';
+
+                return html;
+
+            }
+
+            // Monta a lista de feiras
+            function render() {
+
+                const q = busca.value.trim().toLocaleLowerCase('pt-BR');
+
+                const itens = dados.filter(f =>
+                    (f.nome + ' ' + f.bairro)
+                        .toLocaleLowerCase('pt-BR')
+                        .includes(q)
+                );
+
+                itens.sort((a, b) =>
+                    a.nome.localeCompare(b.nome, 'pt-BR')
+                );
+
+                lista.innerHTML = '';
+
+                if (!itens.length) {
+
+                    lista.innerHTML =
+                        '<div class="empty">Nenhuma feira encontrada.</div>';
+
+                }
+
+                itens.forEach(feira => {
+
+                    const btn = document.createElement('button');
+
+                    btn.type = 'button';
+                    btn.className = 'feira';
+
+                    btn.innerHTML = `
+                        <span class="pin">🧺</span>
+
+                        <span class="info">
+                            <strong>${esc(feira.nome)}</strong>
+                            <span>${esc(feira.bairro)}</span>
+                        </span>
+                    `;
+
+                    btn.addEventListener('click', () => {
+
+                        if (mapa && feira.marcador) {
+
+                            mapa.flyTo({
+                                center: [feira.lng, feira.lat],
+                                zoom: 15
+                            });
+
+                            feira.marcador.togglePopup();
+
+                        }
+
+                    });
+
+                    lista.appendChild(btn);
+
+                });
+
+                status.textContent =
+                    itens.length + ' feira(s) cadastrada(s) · ' +
+                    validas.length + ' com localização no mapa';
+
+            }
+
+            // Inicializa o mapa
+            if (window.maplibregl) {
+
+                try {
+
+                    mapa = new maplibregl.Map({
+
+                        container: 'map',
+
+                        style: 'https://tiles.openfreemap.org/styles/liberty',
+
+                        center: centro,
+
+                        zoom: 11,
+
+                        attributionControl: true
+
+                    });
+
+                    mapa.addControl(
+                        new maplibregl.NavigationControl({
+                            showCompass: false
+                        }),
+                        'bottom-right'
+                    );
+
+                    // Cria um marcador para cada feira com coordenadas válidas
+                    validas.forEach(feira => {
+
+                        const el = document.createElement('div');
+
+                        el.style.cssText = `
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 50% 50% 50% 0;
+                            transform: rotate(-45deg);
+                            background: #EA1D2C;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 7px #0005;
+                            cursor: pointer;
+                        `;
+
+                        const marcador = new maplibregl.Marker({
+                            element: el
+                        })
+                            .setLngLat([feira.lng, feira.lat])
+                            .setPopup(
+                                new maplibregl.Popup({
+                                    offset: 20
+                                }).setHTML(popupHtml(feira))
+                            )
+                            .addTo(mapa);
+
+                        feira.marcador = marcador;
+
+                    });
+
+                    // Ajusta o mapa conforme a quantidade de feiras
+                    if (validas.length === 1) {
+
+                        mapa.setCenter([
+                            validas[0].lng,
+                            validas[0].lat
+                        ]);
+
+                    }
+
+                    if (validas.length > 1) {
+
+                        const limites = new maplibregl.LngLatBounds();
+
+                        validas.forEach(feira => {
+                            limites.extend([feira.lng, feira.lat]);
+                        });
+
+                        mapa.fitBounds(limites, {
+                            padding: {
+                                top: 100,
+                                bottom: 300,
+                                left: 420,
+                                right: 40
+                            },
+                            maxZoom: 13
+                        });
+
+                    }
+
+                    mapa.on('error', e => {
+
+                        console.warn('Falha ao carregar o mapa:', e.error || e);
+
+                        status.textContent =
+                            'Não foi possível carregar o mapa. Confira sua conexão com a internet.';
+
+                    });
+
+                } catch (e) {
+
+                    status.textContent =
+                        'O mapa não pôde ser iniciado neste navegador.';
+
+                    console.error(e);
+
+                }
+
+            } else {
+
+                status.textContent =
+                    'Biblioteca do mapa não carregou. Verifique a conexão com a internet.';
+
+            }
+
+            // Pesquisa por nome ou bairro
+            document.getElementById('formBusca').addEventListener('submit', e => {
+
+                e.preventDefault();
+
+                render();
+
+            });
+
+            busca.addEventListener('input', render);
+
+            // Solicita a localização do usuário
+            document.getElementById('localizar').addEventListener('click', () => {
+
+                if (!navigator.geolocation) {
+
+                    status.textContent =
+                        'Este navegador não oferece localização.';
+
+                    return;
+
+                }
+
+                status.textContent =
+                    'Solicitando permissão para acessar sua localização...';
+
+                navigator.geolocation.getCurrentPosition(
+
+                    pos => {
+
+                        if (mapa) {
+
+                            mapa.flyTo({
+                                center: [
+                                    pos.coords.longitude,
+                                    pos.coords.latitude
+                                ],
+                                zoom: 13
+                            });
+
+                        }
+
+                        status.textContent =
+                            'Sua localização foi encontrada.';
+
+                    },
+
+                    () => {
+
+                        status.textContent =
+                            'Não foi possível obter sua localização.';
+
+                    },
+
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 12000,
+                        maximumAge: 60000
+                    }
+
+                );
+
+            });
+
+            // Exibe as feiras ao abrir a página
+            render();
+
+        })();
+    </script>
+
+</body>
+</html>

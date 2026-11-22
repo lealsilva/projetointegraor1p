@@ -3,6 +3,8 @@ package br.com.feiraintegradora.feiraintegradora.controller;
 
 import br.com.feiraintegradora.feiraintegradora.model.Feira;
 import br.com.feiraintegradora.feiraintegradora.model.Feirante;
+import br.com.feiraintegradora.feiraintegradora.model.Inscricao;
+
 
 
 public class GerenciadorDaFeira {
@@ -54,6 +56,21 @@ public class GerenciadorDaFeira {
             return true;
         }
         
+        return false;
+    }
+    
+    public boolean adicionarFeiranteAutomaticamente(Feirante feirante, Inscricao inscricao) {
+
+        for (int linha = 0; linha < matrizBancas.length; linha++) {
+            for (int coluna = 0; coluna < matrizBancas[linha].length; coluna++) {
+                if (matrizBancas[linha][coluna] == null) {
+                    matrizBancas[linha][coluna] = feirante;
+                    inscricao.setLinhaBanca(linha);
+                    inscricao.setColunaBanca(coluna);
+                    return true;
+                }
+            }
+        }
         return false;
     }
     

@@ -1,27 +1,309 @@
+
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Feirante</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cadastro de Feirante | Feira Perto</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .logo {
+            color: #EA1D2C;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .descricao {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .secao {
+            margin-bottom: 28px;
+        }
+
+        .secao h2 {
+            font-size: 17px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            border-color: #EA1D2C;
+        }
+
+        .erro {
+            background: #ffe6e8;
+            color: #c91523;
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .aviso {
+            background: #fff5f5;
+            border-left: 4px solid #EA1D2C;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .botao {
+            width: 100%;
+            padding: 15px;
+            background: #EA1D2C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background: #c91523;
+        }
+
+        .voltar {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #888;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .voltar:hover {
+            color: #EA1D2C;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            .campos {
+                grid-template-columns: 1fr;
+            }
+
+            .campo.completo {
+                grid-column: auto;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
+<div class="container">
+
+    <div class="logo">Feira Perto</div>
+
     <h1>Cadastro de Feirante</h1>
-</body>
-    <form action="/cadastrar-feirante" method="post">
 
-    <label>Nome do responsável:</label>
-    <input type="text" name="nomeDoResponsavel">
+    <p class="descricao">
+        Preencha seus dados para solicitar seu cadastro
+        como feirante nas feiras municipais.
+    </p>
 
-    <label>Nome da banca:</label>
-    <input type="text" name="nomeDaBanca">
+    <div th:if="${erro}" class="erro" th:text="${erro}"></div>
 
-    <label>Categoria da banca:</label>
-    <input type="text" name="categoriaDaBanca">
+    <form th:action="@{/cadastrar-feirante}"
+          th:object="${feirante}"
+          method="post">
 
-    <label>Número da licença:</label>
-    <input type="text" name="numeroDaLicenca">
+        <section class="secao">
 
-    <button type="submit">Cadastrar Feirante</button>
+            <h2>Dados pessoais</h2>
+
+            <div class="campos">
+
+                <div class="campo completo">
+                    <label for="nomeDoResponsavel">Nome completo</label>
+                    <input type="text"
+                           id="nomeDoResponsavel"
+                           th:field="*{nomeDoResponsavel}"
+                           required>
+                </div>
+
+                <div class="campo">
+                    <label for="cpfCnpj">CPF/CNPJ</label>
+                    <input type="text"
+                           id="cpfCnpj"
+                           th:field="*{cpfCnpj}"
+                           required>
+                </div>
+
+                <div class="campo">
+                    <label for="telefone">Telefone</label>
+                    <input type="tel"
+                           id="telefone"
+                           th:field="*{telefone}"
+                           required>
+                </div>
+
+                <div class="campo completo">
+                    <label for="endereco">Endereço</label>
+                    <input type="text"
+                           id="endereco"
+                           th:field="*{endereco}"
+                           required>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="secao">
+
+            <h2>Dados da banca</h2>
+
+            <div class="campos">
+
+                <div class="campo">
+                    <label for="nomeDaBanca">Nome da banca</label>
+                    <input type="text"
+                           id="nomeDaBanca"
+                           th:field="*{nomeDaBanca}"
+                           required>
+                </div>
+
+                <div class="campo">
+                    <label for="categoriaDaBanca">Categoria</label>
+                    <select id="categoriaDaBanca"
+                            th:field="*{categoriaDaBanca}"
+                            required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="Alimentação">Alimentação</option>
+                        <option value="Hortifruti">Hortifruti</option>
+                        <option value="Artesanato">Artesanato</option>
+                        <option value="Vestuário">Vestuário</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="campo completo">
+                    <label for="numeroDaLicenca">Número da licença</label>
+                    <input type="text"
+                           id="numeroDaLicenca"
+                           th:field="*{numeroDaLicenca}">
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="secao">
+
+            <h2>Dados de acesso</h2>
+
+            <div class="campos">
+
+                <div class="campo completo">
+                    <label for="email">E-mail</label>
+                    <input type="email"
+                           id="email"
+                           th:field="*{email}"
+                           required>
+                </div>
+
+                <div class="campo completo">
+                    <label for="senha">Senha</label>
+                    <input type="password"
+                           id="senha"
+                           th:field="*{senha}"
+                           required>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="aviso">
+            <strong>Importante:</strong> após o envio, seu cadastro
+            ficará com status PENDENTE até ser analisado e aprovado
+            pela Prefeitura.
+        </div>
+
+        <button type="submit" class="botao">
+            Enviar cadastro
+        </button>
 
     </form>
+
+    <a th:href="@{/login-feirante}" class="voltar">
+        Já possui acesso? Voltar ao login
+    </a>
+
+</div>
+
+</body>
 </html>

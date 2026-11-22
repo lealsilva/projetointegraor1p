@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InscricaoRepository extends JpaRepository<Inscricao, Integer> {
-    
+
     List<Inscricao> findAllByFeiraId(int feiraId);
+
+    List<Inscricao> findAllByFeira_IdAndStatusAprovacaoIgnoreCase(
+            int feiraId, String statusAprovacao);
 }

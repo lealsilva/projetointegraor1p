@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login da Prefeitura | Feira Perto</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            min-height: 560px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .painel-esquerdo {
+            background: #EA1D2C;
+            color: white;
+            padding: 55px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ffd9dc;
+        }
+
+        .mensagem {
+            margin: 50px 0;
+        }
+
+        .mensagem h1 {
+            font-size: 34px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .mensagem p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #ffe6e8;
+        }
+
+        .rodape-esquerdo {
+            font-size: 12px;
+            color: #ffe6e8;
+        }
+
+        .painel-direito {
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .painel-direito h2 {
+            font-size: 27px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .descricao {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .campo {
+            margin-bottom: 22px;
+        }
+
+        .campo label {
+            display: block;
+            color: #444;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .campo input:focus {
+            border-color: #EA1D2C;
+            box-shadow: 0 0 0 3px rgba(234, 29, 44, 0.08);
+        }
+
+        .botao {
+            width: 100%;
+            padding: 15px;
+            background: #EA1D2C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .botao:hover {
+            background: #c91523;
+        }
+
+        .voltar {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .voltar:hover {
+            color: #EA1D2C;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                grid-template-columns: 1fr;
+                max-width: 450px;
+            }
+
+            .painel-esquerdo {
+                padding: 30px;
+                min-height: 230px;
+            }
+
+            .mensagem {
+                margin: 30px 0;
+            }
+
+            .mensagem h1 {
+                font-size: 26px;
+            }
+
+            .rodape-esquerdo {
+                display: none;
+            }
+
+            .painel-direito {
+                padding: 35px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <section class="painel-esquerdo">
+
+        <div class="logo">
+            Feira <span>Perto</span>
+        </div>
+
+        <div class="mensagem">
+
+            <h1>Gestão pública mais próxima.</h1>
+
+            <p>
+                Acesse o ambiente administrativo do Feira Perto.
+                Gerencie feiras municipais, acompanhe cadastros
+                e organize os espaços destinados aos feirantes.
+            </p>
+
+        </div>
+
+        <div class="rodape-esquerdo">
+            Feira Perto © 2026 — Todos os direitos reservados.
+        </div>
+
+    </section>
+
+    <section class="painel-direito">
+
+        <h2>Acesso administrativo</h2>
+
+        <p class="descricao">
+            Entre com suas credenciais para acessar o painel da Prefeitura.
+        </p>
+
+        <form th:action="@{/login-prefeitura}" method="post">
+            
+            <div th:if="${erro}" 
+                style="background: #ffe6e8; color: #c91523; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;"
+                th:text="${erro}">
+                
+            </div>
+
+            <div class="campo">
+
+                <label for="email">E-mail institucional</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Digite seu e-mail institucional"
+                    required
+                >
+
+            </div>
+
+            <div class="campo">
+
+                <label for="senha">Senha</label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Digite sua senha"
+                    required
+                >
+
+            </div>
+
+            <button type="submit" class="botao">
+                Acessar painel administrativo
+            </button>
+
+        </form>
+
+        <a th:href="@{/}" class="voltar">
+            ← Voltar para a página inicial
+        </a>
+
+    </section>
+
+</div>
+
+</body>
+</html>

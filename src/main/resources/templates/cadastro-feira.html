@@ -1,42 +1,327 @@
-
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Feira</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cadastrar Feira | Feira Perto</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f6f8;
+            color: #333;
+        }
+
+        header {
+            background: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            color: #EA1D2C;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #777;
+            font-size: 14px;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .cabecalho {
+            margin-bottom: 25px;
+        }
+
+        .cabecalho h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .cabecalho p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .formulario {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+
+        .secao {
+            margin-bottom: 30px;
+        }
+
+        .secao h2 {
+            font-size: 17px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #EA1D2C;
+        }
+
+        .ajuda {
+            color: #999;
+            font-size: 11px;
+            margin-top: 7px;
+        }
+
+        .aviso {
+            background: #fff5f5;
+            border-left: 4px solid #EA1D2C;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .botao {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #EA1D2C;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background: #c91523;
+        }
+
+        .voltar {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #888;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .voltar:hover {
+            color: #EA1D2C;
+        }
+
+        @media (max-width: 600px) {
+            .formulario {
+                padding: 25px 20px;
+            }
+
+            .campos {
+                grid-template-columns: 1fr;
+            }
+
+            .campo.completo {
+                grid-column: auto;
+            }
+
+            .cabecalho h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Cadastro de Feira</h1>
-        
-        
-    <form action="/cadastrar-feira" method="post">
-        
-        <label>Nome da feira:</label>
-        <input type="text" name="nome">
+<header>
+    <div class="logo">Feira Perto</div>
+    <a th:href="@{/painel-prefeitura}">← Voltar ao painel</a>
+</header>
 
-        <label>Bairro:</label>
-        <input type="text" name = "bairro">
+<main>
 
-        <label>Latitude:</label>
-        <input type="number" step = "any" name = "latitude">
+    <div class="cabecalho">
+        <h1>Cadastrar nova feira</h1>
 
-        <label>Longitude:</label>
-        <input type="number"  step = "any" name = "longitude">
+        <p>
+            Registre uma nova feira municipal e configure
+            o espaço disponível para os feirantes.
+        </p>
+    </div>
 
-        <label>Quantidade de linhas:</label>
-        <input type="number" name = "quantidadeDeLinhas">
+    <div class="formulario">
 
-        <label>Quantidade de colunas:</label>
-        <input type="number" name = "quantidadeDeColunas">
+        <form th:action="@{/cadastrar-feira}" method="post">
 
-        <button type="submit">Cadastrar Feira</button>
-        
-    </form>
-    
-    
+            <section class="secao">
 
-    <a href="/">Voltar para o início</a>
+                <h2>Informações da feira</h2>
+
+                <div class="campos">
+
+                    <div class="campo completo">
+                        <label for="nome">Nome da feira</label>
+
+                        <input type="text"
+                               id="nome"
+                               name="nome"
+                               placeholder="Ex: Feira Municipal do Centro"
+                               required>
+                    </div>
+
+                    <div class="campo completo">
+                        <label for="bairro">Bairro ou localização</label>
+
+                        <input type="text"
+                               id="bairro"
+                               name="bairro"
+                               placeholder="Ex: Setor Central"
+                               required>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="secao">
+
+                <h2>Localização no mapa</h2>
+
+                <div class="campos">
+
+                    <div class="campo">
+                        <label for="latitude">Latitude</label>
+
+                        <input type="number"
+                               step="any"
+                               id="latitude"
+                               name="latitude"
+                               placeholder="-16.6869"
+                               required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="longitude">Longitude</label>
+
+                        <input type="number"
+                               step="any"
+                               id="longitude"
+                               name="longitude"
+                               placeholder="-49.2648"
+                               required>
+                    </div>
+
+                </div>
+
+                <p class="ajuda">
+                    Informe as coordenadas geográficas da feira.
+                </p>
+
+            </section>
+
+            <section class="secao">
+
+                <h2>Capacidade de bancas</h2>
+
+                <div class="campos">
+
+                    <div class="campo">
+                        <label for="quantidadeDeLinhas">
+                            Quantidade de linhas
+                        </label>
+
+                        <input type="number"
+                               id="quantidadeDeLinhas"
+                               name="quantidadeDeLinhas"
+                               min="1"
+                               placeholder="Ex: 5"
+                               required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="quantidadeDeColunas">
+                            Quantidade de colunas
+                        </label>
+
+                        <input type="number"
+                               id="quantidadeDeColunas"
+                               name="quantidadeDeColunas"
+                               min="1"
+                               placeholder="Ex: 10"
+                               required>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <div class="aviso">
+                <strong>Atenção:</strong> a quantidade de linhas e colunas
+                determina o número total de bancas disponíveis na feira.
+            </div>
+
+            <button type="submit" class="botao">
+                Cadastrar feira
+            </button>
+
+        </form>
+
+        <a th:href="@{/painel-prefeitura}" class="voltar">
+            Cancelar e voltar ao painel
+        </a>
+
+    </div>
+
+</main>
 
 </body>
 </html>

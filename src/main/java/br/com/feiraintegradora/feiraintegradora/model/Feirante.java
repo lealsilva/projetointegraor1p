@@ -1,3 +1,4 @@
+
 package br.com.feiraintegradora.feiraintegradora.model;
 
 import jakarta.persistence.Entity;
@@ -7,7 +8,7 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 public class Feirante {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,6 +17,11 @@ public class Feirante {
     private String categoriaDaBanca;
     private String numeroDaLicenca;
     private String statusAprovacao;
+    private String email;
+    private String senha;
+    private String telefone;
+    private String cpfCnpj;
+    private String endereco;
 
     public int getId() {
         return id;
@@ -64,18 +70,67 @@ public class Feirante {
     public void setStatusAprovacao(String statusAprovacao) {
         this.statusAprovacao = statusAprovacao;
     }
-    
-    public Feirante (){
-        
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCpfCnpj() {
+        return cpfCnpj;
+    }
+
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpfCnpj = cpfCnpj;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
     
-    public Feirante(int id, String nomeDoResponsavel, String nomeDaBanca, String categoriaDaBanca, String numeroDaLicenca, String statusAprovacao) {
+    
+    public Feirante() {
+
+    }
+
+    public Feirante(int id, String nomeDoResponsavel, String nomeDaBanca, String categoriaDaBanca, String numeroDaLicenca, String statusAprovacao, String email, String senha, String telefone, String cpfCnpj, String endereco) {
         this.id = id;
         this.nomeDoResponsavel = nomeDoResponsavel;
         this.nomeDaBanca = nomeDaBanca;
         this.categoriaDaBanca = categoriaDaBanca;
         this.numeroDaLicenca = numeroDaLicenca;
         this.statusAprovacao = statusAprovacao;
+        this.email = email;
+        this.senha = senha;
+        this.telefone = telefone;
+        this.cpfCnpj = cpfCnpj;
+        this.endereco = endereco;
     }
     
+    
 }
+
+  

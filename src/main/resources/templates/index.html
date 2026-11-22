@@ -1,17 +1,408 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feira Integradora</title>
+
+    <title>Feira Perto | Feiras Municipais</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            color: #333;
+            background: #fff;
+        }
+
+        header {
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            color: #EA1D2C;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        nav a {
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #EA1D2C;
+        }
+
+        .acesso {
+            background: #EA1D2C;
+            color: white !important;
+            padding: 12px 19px;
+            border-radius: 7px;
+        }
+
+        .hero {
+            background: linear-gradient(120deg, #EA1D2C, #b9101d);
+            color: white;
+            padding: 100px 7%;
+        }
+
+        .hero-conteudo {
+            max-width: 750px;
+        }
+
+        .etiqueta {
+            display: inline-block;
+            background: rgba(255,255,255,0.16);
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.15;
+            margin-bottom: 22px;
+        }
+
+        .hero p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #ffe8e9;
+            max-width: 600px;
+            margin-bottom: 32px;
+        }
+
+        .botao-branco {
+            display: inline-block;
+            background: white;
+            color: #EA1D2C;
+            padding: 16px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .botao-branco:hover {
+            background: #f5f5f5;
+        }
+
+        .secao {
+            padding: 75px 7%;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .titulo h2 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .titulo p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .cartoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        .cartao {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .cartao:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        .icone {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 20px;
+            background: #fff0f1;
+            color: #EA1D2C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 25px;
+        }
+
+        .cartao h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .cartao p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .cartao a {
+            color: #EA1D2C;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .faixa {
+            background: #f7f7f8;
+            padding: 65px 7%;
+            text-align: center;
+        }
+
+        .faixa h2 {
+            font-size: 27px;
+            margin-bottom: 15px;
+        }
+
+        .faixa p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 650px;
+            margin: 0 auto 25px;
+        }
+
+        .botao-vermelho {
+            display: inline-block;
+            background: #EA1D2C;
+            color: white;
+            padding: 15px 23px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #242424;
+            color: white;
+            padding: 35px 7%;
+            text-align: center;
+        }
+
+        footer strong {
+            color: #EA1D2C;
+            font-size: 21px;
+        }
+
+        footer p {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .hero {
+                padding: 70px 7%;
+            }
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .titulo h2 {
+                font-size: 25px;
+            }
+        }
+    </style>
 </head>
-    <body>
 
-        <h1>Bem-vindo à Feira Integradora!</h1>
-    
-        <a href="/cadastro-feira">Cadastrar Feira</a>
+<body>
 
-        <p>Encontre feiras, conheça os feirantes e descubra novas bancas.</p>
+<header>
 
-    </body>
+    <div class="logo">Feira Perto</div>
+
+    <nav>
+        <a th:href="@{/}">Início</a>
+        <a th:href="@{/feiras}">Feiras</a>
+        <a th:href="@{/mapa}">Mapa</a>
+        <a th:href="@{/login-feirante}">Feirante</a>
+        <a th:href="@{/login-prefeitura}" class="acesso">
+            Prefeitura
+        </a>
+    </nav>
+
+</header>
+
+<section class="hero">
+
+    <div class="hero-conteudo">
+
+        <span class="etiqueta">
+            CONECTANDO PESSOAS E COMÉRCIO LOCAL
+        </span>
+
+        <h1>
+            Encontre as feiras municipais mais perto de você.
+        </h1>
+
+        <p>
+            Descubra feiras, conheça os comerciantes locais e
+            encontre produtos e experiências perto da sua região.
+            Tudo em um só lugar.
+        </p>
+
+        <a th:href="@{/mapa}" class="botao-branco">
+            Explorar mapa das feiras
+        </a>
+
+    </div>
+
+</section>
+
+<section class="secao">
+
+    <div class="titulo">
+
+        <h2>Explore o Feira Perto</h2>
+
+        <p>
+            Encontre informações e serviços para aproveitar
+            melhor as feiras municipais.
+        </p>
+
+    </div>
+
+    <div class="cartoes">
+
+        <div class="cartao">
+
+            <div class="icone">⌖</div>
+
+            <h3>Mapa das feiras</h3>
+
+            <p>
+                Visualize a localização das feiras municipais
+                e encontre opções próximas.
+            </p>
+
+            <a th:href="@{/mapa}">
+                Explorar mapa →
+            </a>
+
+        </div>
+
+        <div class="cartao">
+
+            <div class="icone">☷</div>
+
+            <h3>Lista de feiras</h3>
+
+            <p>
+                Consulte as feiras cadastradas e conheça
+                seus locais de funcionamento.
+            </p>
+
+            <a th:href="@{/feiras}">
+                Ver feiras →
+            </a>
+
+        </div>
+
+        <div class="cartao">
+
+            <div class="icone">♧</div>
+
+            <h3>Área do feirante</h3>
+
+            <p>
+                Acesse sua área, acompanhe seu cadastro
+                e gerencie suas inscrições.
+            </p>
+
+            <a th:href="@{/login-feirante}">
+                Acessar área →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="faixa">
+
+    <h2>Você é feirante?</h2>
+
+    <p>
+        Faça seu cadastro no Feira Perto e tenha a oportunidade
+        de participar das feiras municipais.
+    </p>
+
+    <a th:href="@{/cadastro-feirante}" class="botao-vermelho">
+        Quero me cadastrar
+    </a>
+
+</section>
+
+<footer>
+
+    <strong>Feira Perto</strong>
+
+    <p>
+        Valorizando o comércio local e aproximando a população
+        das feiras municipais.
+    </p>
+
+    <p>
+        Feira Perto © 2026 - Projeto Integrador
+    </p>
+
+</footer>
+
+</body>
 </html>

@@ -1,21 +1,340 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Feirantes cadastrados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gerenciar Feirantes | Feira Perto</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f6f8;
+            color: #333;
+        }
+
+        header {
+            background: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            color: #EA1D2C;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        header a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .descricao {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .contador {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+        }
+
+        .contador strong {
+            display: block;
+            font-size: 25px;
+            color: #EA1D2C;
+        }
+
+        .contador span {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .tabela-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+            overflow-x: auto;
+        }
+
+        .tabela-container h2 {
+            font-size: 18px;
+            margin-bottom: 22px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 12px;
+            background: #fafafa;
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 17px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .nome {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .banca {
+            color: #777;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .pendente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .aprovado {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .rejeitado {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 7px;
+        }
+
+        .botao {
+            border: none;
+            padding: 9px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .aprovar {
+            background: #198754;
+            color: white;
+        }
+
+        .rejeitar {
+            background: #EA1D2C;
+            color: white;
+        }
+
+        .sem-acoes {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 35px;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin-top: 25px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .tabela-container {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Feirantes cadastrados</h1>
-        <div th:each="feirante : ${feirantes}">
-            <h2 th:text="${feirante.nomeDoResponsavel}"></h2>
 
-            <p th:text="${feirante.nomeDaBanca}"></p>
+<header>
+    <div class="logo">Feira Perto</div>
+    <a th:href="@{/painel-prefeitura}">← Voltar ao painel</a>
+</header>
 
-            <p th:text="${feirante.categoriaDaBanca}"></p>
+<main>
 
-            <p th:text="${feirante.numeroDaLicenca}"></p>
+    <div class="topo">
 
-            <p th:text="${feirante.statusAprovacao}"></p>
+        <div>
+            <h1>Gerenciar Feirantes</h1>
+            <p class="descricao">
+                Consulte e gerencie os cadastros dos feirantes.
+            </p>
         </div>
+
+        <div class="contador">
+            <strong th:text="${#lists.size(feirantes)}">0</strong>
+            <span>Feirantes cadastrados</span>
+        </div>
+
+    </div>
+
+    <div class="tabela-container">
+
+        <h2>Cadastros registrados</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Feirante</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Telefone</th>
+                    <th>Categoria</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr th:each="feirante : ${feirantes}">
+
+                    <td>
+                        <div class="nome"
+                             th:text="${feirante.nomeDoResponsavel}">
+                            Nome
+                        </div>
+
+                        <div class="banca"
+                             th:text="${feirante.nomeDaBanca}">
+                            Nome da banca
+                        </div>
+                    </td>
+
+                    <td th:text="${feirante.cpfCnpj}">CPF</td>
+
+                    <td th:text="${feirante.telefone}">Telefone</td>
+
+                    <td th:text="${feirante.categoriaDaBanca}">
+                        Categoria
+                    </td>
+
+                    <td>
+                        <span class="status"
+                              th:classappend="${feirante.statusAprovacao == 'PENDENTE'} ? ' pendente' :
+                              (${feirante.statusAprovacao == 'APROVADO'} ? ' aprovado' : ' rejeitado')"
+                              th:text="${feirante.statusAprovacao}">
+                            PENDENTE
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <div class="acoes"
+                             th:if="${feirante.statusAprovacao == 'PENDENTE'}">
+
+                            <form th:action="@{/aprovar-feirante}"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="id"
+                                       th:value="${feirante.id}">
+
+                                <button type="submit"
+                                        class="botao aprovar">
+                                    Aprovar
+                                </button>
+
+                            </form>
+
+                            <form th:action="@{/rejeitar-feirante}"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="id"
+                                       th:value="${feirante.id}">
+
+                                <button type="submit"
+                                        class="botao rejeitar">
+                                    Rejeitar
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                        <span class="sem-acoes"
+                              th:unless="${feirante.statusAprovacao == 'PENDENTE'}">
+                            Sem ações
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(feirantes)}">
+                    <td colspan="6" class="vazio">
+                        Nenhum feirante cadastrado até o momento.
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</main>
+
 </body>
 </html>
